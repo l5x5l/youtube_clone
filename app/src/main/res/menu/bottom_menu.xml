@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/bottom_menu_home"
+        android:title="홈"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/bottom_menu_quest"
+        android:title="탐색"
+        android:icon="@drawable/ic_quest"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/buttom_fab"
+        android:title=""
+        android:checkable="false"
+        android:enabled="false"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/bottom_menu_subscribe"
+        android:title="구독"
+        android:icon="@drawable/ic_subscriptions"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/bottom_menu_storage"
+        android:title="보관함"
+        android:icon="@drawable/ic_storage"
+        app:showAsAction="always"/>
+</menu>
