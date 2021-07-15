@@ -8,6 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
+    android:id="@+id/main_layout"
     tools:background="@color/background_color">
 
     <androidx.appcompat.widget.AppCompatImageView
