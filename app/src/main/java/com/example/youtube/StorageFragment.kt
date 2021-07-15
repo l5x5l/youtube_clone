@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentStorageBinding
 
 class StorageFragment : Fragment() {
@@ -14,6 +15,7 @@ class StorageFragment : Fragment() {
     //private lateinit var binding: FragmentStorageBinding
 
     private lateinit var categoryAdapter: DataStorageCategoryAdapter
+    private lateinit var playListRecyclerViewAdapter : DataPlaylistAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,6 +54,18 @@ class StorageFragment : Fragment() {
 
         //videoActivity destory될 때마다 intent로 전달하면 되지 않나...
         //여기에 데이터를 기반으로 동적으로 linear layout에 addView를 사용해 추가
+
+        // 여긴 리사이클러뷰
+        val linearLayoutManager = LinearLayoutManager(activity as MainActivity)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.playListRecyclerview.layoutManager = linearLayoutManager
+
+        var playList = ArrayList<DataPlaylist>()
+        playList.add(DataPlaylist("플러터 강의", R.drawable.user_flutter, 25))
+        playList.add(DataPlaylist("휴식용", R.drawable.dreams_dreams, 3))
+
+        playListRecyclerViewAdapter = DataPlaylistAdapter(activity as MainActivity, playList)
+        binding.playListRecyclerview.adapter = playListRecyclerViewAdapter
     }
 
     private fun goToHistory(){
