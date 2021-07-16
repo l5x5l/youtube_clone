@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전"))
         videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전"))
 
-        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
+        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList, ::goToVideoActivity)
         binding.videoRecyclerview.adapter = videoRecyclerViewAdapter
     }
 
@@ -53,6 +53,16 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    public fun goToVideoActivity(user_name : String, user_profile : Int, video_id : Int, video_title : String, video_info : String) : Unit {
+        val intent = Intent(activity, VideoActivity::class.java)
+        intent.putExtra("id", video_id)
+        intent.putExtra("user", user_profile)
+        intent.putExtra("userName", user_name)
+        intent.putExtra("subText", video_info)
+        intent.putExtra("videoTitle", video_title)
+        startActivity(intent)
     }
 
 }

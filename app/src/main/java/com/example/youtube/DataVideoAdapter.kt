@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youtube.databinding.ItemVideoBinding
 
-class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataVideo>) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
+class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataVideo>, onClick : (String, Int, Int, String, String) -> Unit) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
+
+    private val onClick = onClick
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
         var videoTitle = binding.videoTitle
@@ -19,6 +21,7 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
         var userProfile = binding.profileSrc
         var userName = binding.userName
         var progress = binding.progress
+        var mainLayout = binding.mainLayout
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,12 +31,16 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val info = "조회수 " + getInformationString(dataList[position].watch_count) + '\u00b7' + " " + dataList[position].day_count
         holder.videoThumbnail.setImageResource(dataList[position].thumbnail)
         holder.videoTitle.text = dataList[position].video_title
-        holder.videoInformation.text = "조회수 " + getInformationString(dataList[position].watch_count) + '\u00b7' + " " + dataList[position].day_count
+        holder.videoInformation.text = info
         holder.userName.text = dataList[position].user_name
         holder.userProfile.setImageResource(dataList[position].user_profile)
         holder.progress.progress = dataList[position].progress
+        holder.mainLayout.setOnClickListener {
+            onClick(dataList[position].user_name, dataList[position].user_profile, R.raw.ani, dataList[position].video_title, info)
+        }
     }
 
     override fun getItemCount(): Int = dataList.size
