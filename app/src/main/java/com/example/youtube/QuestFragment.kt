@@ -43,6 +43,8 @@ class QuestFragment : Fragment() {
 
         categoryRecyclerViewAdapter = DataCategoryAdapter(activity as MainActivity, categoryList)
         binding.categoryRecycler.adapter = categoryRecyclerViewAdapter
+
+        binding.categoryRecycler.addItemDecoration(DataCategoryDecoration(activity as MainActivity))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
