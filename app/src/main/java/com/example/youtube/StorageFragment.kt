@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentStorageBinding
 
@@ -15,6 +16,7 @@ class StorageFragment : Fragment() {
 
     private lateinit var playListRecyclerViewAdapter : DataPlaylistAdapter
     private lateinit var categoryRecyclerAdapter: DataStorageCategoryAdapter
+    private lateinit var itemTouchHelper : ItemTouchHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,22 +47,30 @@ class StorageFragment : Fragment() {
 
 
         // 여긴 리사이클러뷰
-        val linearLayoutManager2 = LinearLayoutManager(activity as MainActivity)
-        linearLayoutManager2.orientation = LinearLayoutManager.VERTICAL
-        binding.categoryRecyclerview.layoutManager = linearLayoutManager2
+        val linearLayoutManager = LinearLayoutManager(activity as MainActivity)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.categoryRecyclerview.layoutManager = linearLayoutManager
 
         categoryRecyclerAdapter = DataStorageCategoryAdapter(activity as MainActivity, categoryList)
         binding.categoryRecyclerview.adapter = categoryRecyclerAdapter
         binding.categoryRecyclerview.isNestedScrollingEnabled = false
 
+        itemTouchHelper = ItemTouchHelper(StorageCategoryItemTouchHelperCallback(categoryRecyclerAdapter))
+        itemTouchHelper.attachToRecyclerView(binding.categoryRecyclerview)
+
+
         // 여기도 리사이클러뷰
-        val linearLayoutManager = LinearLayoutManager(activity as MainActivity)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.playListRecyclerview.layoutManager = linearLayoutManager
+        val linearLayoutManager2 = LinearLayoutManager(activity as MainActivity)
+        linearLayoutManager2.orientation = LinearLayoutManager.VERTICAL
+        binding.playListRecyclerview.layoutManager = linearLayoutManager2
 
         var playList = ArrayList<DataPlaylist>()
         playList.add(DataPlaylist("플러터 강의", R.drawable.user_flutter, 25))
+        playList.add(DataPlaylist("플러터 강의2", R.drawable.user_flutter, 25))
+        playList.add(DataPlaylist("플러터 강의3", R.drawable.user_flutter, 25))
         playList.add(DataPlaylist("휴식용", R.drawable.dreams_dreams, 3))
+        playList.add(DataPlaylist("휴식용2", R.drawable.dreams_dreams, 3))
+        playList.add(DataPlaylist("휴식용3", R.drawable.dreams_dreams, 3))
 
 
         playListRecyclerViewAdapter = DataPlaylistAdapter(activity as MainActivity, playList)
