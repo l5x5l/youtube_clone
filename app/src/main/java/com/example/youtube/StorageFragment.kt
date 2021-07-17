@@ -12,19 +12,13 @@ class StorageFragment : Fragment() {
 
     private var _binding : FragmentStorageBinding? = null
     private val binding get() = _binding!!
-    //private lateinit var binding: FragmentStorageBinding
 
-    private lateinit var categoryAdapter: DataStorageCategoryAdapter
     private lateinit var playListRecyclerViewAdapter : DataPlaylistAdapter
+    private lateinit var categoryRecyclerAdapter: DataStorageCategoryAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         _binding = FragmentStorageBinding.inflate(inflater, container, false)
-
-        //binding.history.setOnClickListener { goToHistory() }
-
-        // listView 사용하는 부분
-
 
         binding.appbar.setLogo(R.drawable.youtube_mini)
         (activity as MainActivity).setSupportActionBar(binding.appbar)
@@ -49,13 +43,17 @@ class StorageFragment : Fragment() {
         categoryList.add(DataStorageCategory("내 영화", R.drawable.ic_film, 0, false))
         categoryList.add(DataStorageCategory("나중에 볼 동영상", R.drawable.ic_time, 3, false))
 
-        categoryAdapter = DataStorageCategoryAdapter((activity as MainActivity), categoryList)
-        binding.categoryListview.adapter = categoryAdapter
-
-        //videoActivity destory될 때마다 intent로 전달하면 되지 않나...
-        //여기에 데이터를 기반으로 동적으로 linear layout에 addView를 사용해 추가
 
         // 여긴 리사이클러뷰
+        val linearLayoutManager2 = LinearLayoutManager(activity as MainActivity)
+        linearLayoutManager2.orientation = LinearLayoutManager.VERTICAL
+        binding.categoryRecyclerview.layoutManager = linearLayoutManager2
+
+        categoryRecyclerAdapter = DataStorageCategoryAdapter(activity as MainActivity, categoryList)
+        binding.categoryRecyclerview.adapter = categoryRecyclerAdapter
+        binding.categoryRecyclerview.isNestedScrollingEnabled = false
+
+        // 여기도 리사이클러뷰
         val linearLayoutManager = LinearLayoutManager(activity as MainActivity)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.playListRecyclerview.layoutManager = linearLayoutManager
@@ -64,12 +62,10 @@ class StorageFragment : Fragment() {
         playList.add(DataPlaylist("플러터 강의", R.drawable.user_flutter, 25))
         playList.add(DataPlaylist("휴식용", R.drawable.dreams_dreams, 3))
 
+
         playListRecyclerViewAdapter = DataPlaylistAdapter(activity as MainActivity, playList)
         binding.playListRecyclerview.adapter = playListRecyclerViewAdapter
-    }
-
-    private fun goToHistory(){
-        (activity as MainActivity).replaceFragment(HistoryFragment())
+        binding.playListRecyclerview.isNestedScrollingEnabled = false
     }
 
     override fun onDestroyView() {

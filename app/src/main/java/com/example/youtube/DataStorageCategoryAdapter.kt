@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.youtube.databinding.ItemStorageContentListviewBinding
 
+/*
 class DataStorageCategoryAdapter(context: Context, private val dataList : ArrayList<DataStorageCategory>) : BaseAdapter() {
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -34,4 +36,39 @@ class DataStorageCategoryAdapter(context: Context, private val dataList : ArrayL
         }
         return binding.root
     }
+}
+*/
+class DataStorageCategoryAdapter(context: Context, dataList : ArrayList<DataStorageCategory>) : RecyclerView.Adapter<DataStorageCategoryAdapter.ViewHolder>(){
+
+    private var dataList = dataList
+    private lateinit var binding : ItemStorageContentListviewBinding
+    private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+    class ViewHolder(binding : ItemStorageContentListviewBinding) : RecyclerView.ViewHolder(binding.root) {
+        var mainLayout = binding.mainLayout
+        var name = binding.tvCategory
+        var icon = binding.icCategory
+        var info = binding.tvMeta
+        var premium = binding.icCheck
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        binding = ItemStorageContentListviewBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.name.text = dataList[position].name
+        holder.icon.setImageResource(dataList[position].icon)
+        if (dataList[position].premium){
+            holder.premium.setImageResource(R.drawable.ic_check_circle)
+            holder.premium.visibility = View.VISIBLE
+        }
+        if (dataList[position].count > 0){
+            holder.info.text = "동영상 " + dataList[position].count.toString() + "개"
+            holder.info.visibility = View.VISIBLE
+        }
+    }
+
+    override fun getItemCount(): Int = dataList.size
 }
