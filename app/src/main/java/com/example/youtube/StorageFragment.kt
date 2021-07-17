@@ -17,6 +17,7 @@ class StorageFragment : Fragment() {
     private lateinit var playListRecyclerViewAdapter : DataPlaylistAdapter
     private lateinit var categoryRecyclerAdapter: DataStorageCategoryAdapter
     private lateinit var itemTouchHelper : ItemTouchHelper
+    private lateinit var itemTouchHelper2 : ItemTouchHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -76,6 +77,9 @@ class StorageFragment : Fragment() {
         playListRecyclerViewAdapter = DataPlaylistAdapter(activity as MainActivity, playList)
         binding.playListRecyclerview.adapter = playListRecyclerViewAdapter
         binding.playListRecyclerview.isNestedScrollingEnabled = false
+
+        itemTouchHelper2 = ItemTouchHelper(PlaylistTouchHelperCallback(playListRecyclerViewAdapter))
+        itemTouchHelper2.attachToRecyclerView(binding.playListRecyclerview)
     }
 
     override fun onDestroyView() {
