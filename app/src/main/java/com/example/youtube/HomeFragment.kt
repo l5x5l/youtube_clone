@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    public fun goToVideoActivity(user_name : String, user_profile : Int, video_id : Int, video_title : String, video_info : String) : Unit {
+    fun goToVideoActivity(user_name : String, user_profile : Int, video_id : Int, video_title : String, video_info : String) : Unit {
         val intent = Intent(activity, VideoActivity::class.java)
         intent.putExtra("id", video_id)
         intent.putExtra("user", user_profile)

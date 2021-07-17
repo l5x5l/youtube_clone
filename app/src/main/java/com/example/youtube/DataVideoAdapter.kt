@@ -12,6 +12,8 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
 
+    // 일단 context 추가
+    private val context = context
     private val onClick = onClick
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
@@ -40,6 +42,11 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
         holder.progress.progress = dataList[position].progress
         holder.mainLayout.setOnClickListener {
             onClick(dataList[position].user_name, dataList[position].user_profile, R.raw.ani, dataList[position].video_title, info)
+        }
+        holder.mainLayout.setOnLongClickListener {
+            val bottomSheet = ClassBottomSheet()
+            bottomSheet.show((context as MainActivity).supportFragmentManager, bottomSheet.tag)
+            true
         }
     }
 
