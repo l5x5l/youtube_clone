@@ -31,6 +31,11 @@ class MainActivity : AppCompatActivity() {
             )
             true
         }
+
+        binding.bottomFab.setOnClickListener{
+            val bottomSheetMain = ClassBottomSheetMain()
+            bottomSheetMain.show(this.supportFragmentManager, bottomSheetMain.tag)
+        }
     }
 
     public fun replaceFragment (fragment : Fragment) {
