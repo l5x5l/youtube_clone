@@ -1,12 +1,14 @@
 package com.example.youtube
 
 import android.content.Context
+import android.graphics.Canvas
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youtube.databinding.ItemPlaylistBinding
+import kotlinx.android.synthetic.main.item_playlist.view.*
 
 interface PlaylistTouchHelperListener{
     fun onItemSwipe(position : Int) : Unit
@@ -27,6 +29,32 @@ class PlaylistTouchHelperCallback(listener: PlaylistTouchHelperListener) : ItemT
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         listener.onItemSwipe(viewHolder.adapterPosition)
     }
+
+    // 여기서부터는 스와이프시 백그라운드가 보이도록 하는 부분
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        getDefaultUIUtil().clearView(getView(viewHolder))
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        viewHolder?.let {
+            getDefaultUIUtil().onSelected(getView(it))
+        }
+    }
+
+    override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            val view = getView(viewHolder)
+            getDefaultUIUtil().onDraw(
+                    c, recyclerView, view, dX, dY, actionState, isCurrentlyActive
+            )
+        }
+    }
+
+    private fun getView(viewHolder : RecyclerView.ViewHolder): View {
+        return (viewHolder as DataPlaylistAdapter.ViewHolder).itemView.swipe_target
+    }
+
 
 }
 
