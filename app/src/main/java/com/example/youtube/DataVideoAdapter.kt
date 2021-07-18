@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.youtube.databinding.ItemVideoBinding
 
 // onClick : (String, Int, Int, String, String) -> Unit
-class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataVideo>) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
+class DataVideoAdapter (context: Context, dataList : ArrayList<DataVideo>) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
+
+    private var dataList = dataList
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
@@ -71,6 +73,11 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
         intent.putExtra("subText", video_info)
         intent.putExtra("videoTitle", video_title)
         context.startActivity(intent)
+    }
 
+    // 특정 데이터만 표기하거나 원본 리스트를 다시 표시하고자 할 때
+    public fun setDataList(newDataList : ArrayList<DataVideo>){
+        dataList = newDataList
+        notifyDataSetChanged()
     }
 }
