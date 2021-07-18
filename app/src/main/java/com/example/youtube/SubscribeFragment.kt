@@ -11,6 +11,7 @@ class SubscribeFragment : Fragment() {
     private var _binding : FragmentSubscribeBinding? = null
     private val binding get() = _binding!!
     private lateinit var userRecyclerViewAdapter : DataUserAdapter
+    private lateinit var videoRecyclerViewAdapter: DataVideoAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,21 @@ class SubscribeFragment : Fragment() {
 
         userRecyclerViewAdapter = DataUserAdapter(activity as MainActivity, userList)
         binding.userRecyclerview.adapter = userRecyclerViewAdapter
+
+        var videoList = ArrayList<DataVideo>()
+        videoList.add(DataVideo("Migrating an old app to Flutter2", R.drawable.thumbnail_flutter_2, "Flutter", R.drawable.user_flutter, 10544, "1개월 전", R.raw.video_flutter_2))
+        videoList.add(DataVideo("Apple Watch Pocket - 활짝 (컨셉 디자인)", R.drawable.thumbnail_pate_1, "파테슘", R.drawable.user_pate, 35099, "4개월 전", R.raw.video_pate_1))
+        videoList.add(DataVideo("패키지 비동기 (이 주의 패키지)", R.drawable.thumbnail_flutter_1, "Flutter", R.drawable.user_flutter, 39229, "1년 전", R.raw.video_flutter_1))
+        videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전", R.raw.logo))
+        videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전", R.raw.ani))
+
+        val videolinearLayoutManager = LinearLayoutManager(activity as MainActivity)
+        videolinearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.videoRecycler.layoutManager = videolinearLayoutManager
+
+        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
+        binding.videoRecycler.adapter = videoRecyclerViewAdapter
+        binding.videoRecycler.isNestedScrollingEnabled = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

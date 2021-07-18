@@ -2,19 +2,21 @@ package com.example.youtube
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.youtube.databinding.ItemVideoBinding
 
-class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataVideo>, onClick : (String, Int, Int, String, String) -> Unit) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
+// onClick : (String, Int, Int, String, String) -> Unit
+class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataVideo>) : RecyclerView.Adapter<DataVideoAdapter.ViewHolder>(){
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
 
     // 일단 context 추가
     private val context = context
-    private val onClick = onClick
+    //private val onClick = onClick
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
         var videoTitle = binding.videoTitle
@@ -41,7 +43,8 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
         holder.userProfile.setImageResource(dataList[position].user_profile)
         holder.progress.progress = dataList[position].progress
         holder.mainLayout.setOnClickListener {
-            onClick(dataList[position].user_name, dataList[position].user_profile, R.raw.ani, dataList[position].video_title, info)
+            //onClick(dataList[position].user_name, dataList[position].user_profile, dataList[position].dataId, dataList[position].video_title, info)
+            goToVideoActivity(dataList[position].user_name, dataList[position].user_profile, dataList[position].dataId, dataList[position].video_title, info)
         }
         holder.mainLayout.setOnLongClickListener {
             val bottomSheet = ClassBottomSheet()
@@ -55,8 +58,19 @@ class DataVideoAdapter (context: Context, private val dataList : ArrayList<DataV
     private fun getInformationString(watchCount : Int) : String {
         return when(watchCount / 1000){
             0 -> watchCount.toString() + "회 "
-            in 1..10 -> (watchCount / 1000).toString() + "천회 "
+            in 1..9 -> (watchCount / 1000).toString() + "천회 "
             else -> (watchCount / 10000).toString() + "만회 "
         }
+    }
+
+    fun goToVideoActivity(user_name : String, user_profile : Int, video_id : Int, video_title : String, video_info : String) : Unit {
+        val intent = Intent(context as MainActivity, VideoActivity::class.java)
+        intent.putExtra("id", video_id)
+        intent.putExtra("user", user_profile)
+        intent.putExtra("userName", user_name)
+        intent.putExtra("subText", video_info)
+        intent.putExtra("videoTitle", video_title)
+        context.startActivity(intent)
+
     }
 }

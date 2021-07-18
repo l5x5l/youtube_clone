@@ -38,10 +38,10 @@ class HomeFragment : Fragment() {
         binding.videoRecyclerview.layoutManager = linearLayoutManager
 
         var videoList = ArrayList<DataVideo>()
-        videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전"))
-        videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전"))
+        videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전", R.raw.ani))
+        videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전", R.raw.logo))
 
-        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList, ::goToVideoActivity)
+        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
         binding.videoRecyclerview.adapter = videoRecyclerViewAdapter
     }
 
@@ -60,6 +60,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    // ::goTovideoActivity 를 사용해서 함수를 안자로 전달할 수 있다.
     fun goToVideoActivity(user_name : String, user_profile : Int, video_id : Int, video_title : String, video_info : String) : Unit {
         val intent = Intent(activity, VideoActivity::class.java)
         intent.putExtra("id", video_id)
