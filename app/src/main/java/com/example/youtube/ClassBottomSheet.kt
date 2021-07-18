@@ -21,12 +21,12 @@ class ClassBottomSheet() : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var dataList = ArrayList<DataBottomSheetOption>()
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "나중에 볼 동영상에 저장"))
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "재생목록에 저장"))
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "동영상 오프라인 저장"))
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "공유"))
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "관심없음"))
-        dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "채널 추천 안함"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_time, "나중에 볼 동영상에 저장"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_save, "재생목록에 저장"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_download, "동영상 오프라인 저장"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_share, "공유"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_do_not_disturb, "관심없음"))
+        dataList.add(DataBottomSheetOption(R.drawable.ic_delete, "채널 추천 안함"))
         dataList.add(DataBottomSheetOption(R.drawable.ic_fire, "신고"))
 
         bottomSheetOptionAdapter = DataBottomSheetOptionAdapter((activity as MainActivity), dataList)
