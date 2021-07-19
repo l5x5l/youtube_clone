@@ -65,7 +65,7 @@ class VideoActivity : AppCompatActivity() {
     override fun onDestroy() {
         percentage = (stopPosition.toFloat() / videoLength)
         percentage*= 100
-        Toast.makeText(this,  "전체 영상 중 "+percentage.toInt().toString() + "% 가 실행됨", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,  "전체 영상 중 "+percentage.toInt().toString() + "% 가 실행됨", Toast.LENGTH_SHORT).show()
         super.onDestroy()
     }
 

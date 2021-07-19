@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(activity, "testing!!", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(activity, "testing!!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
