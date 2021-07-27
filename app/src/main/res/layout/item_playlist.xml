@@ -16,7 +16,7 @@
         android:background="@color/red"
         android:text="제거"
         android:textColor="@color/white"
-        android:textSize="24dp"
+        android:textSize="20dp"
         android:gravity="end|center_vertical"
         android:paddingEnd="12dp"
         />
@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_meta"
             tools:text = "text"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textColor="@color/white"
             android:gravity="center_vertical"/>
 
