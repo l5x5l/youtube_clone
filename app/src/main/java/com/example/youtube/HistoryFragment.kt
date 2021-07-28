@@ -8,14 +8,15 @@ import com.example.youtube.databinding.FragmentHistoryBinding
 
 class HistoryFragment : Fragment() {
 
-    private lateinit var binding : FragmentHistoryBinding
+    private var _binding : FragmentHistoryBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHistoryBinding.inflate(inflater, container, false)
+        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
         (activity as MainActivity).setSupportActionBar(binding.appbar)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -37,5 +38,10 @@ class HistoryFragment : Fragment() {
         else{
             return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

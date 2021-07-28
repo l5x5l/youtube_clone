@@ -29,8 +29,20 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(
                 when(it.itemId) {
                     R.id.bottom_menu_home -> HomeFragment()
-                    R.id.bottom_menu_storage -> StorageFragment()
-                    R.id.bottom_menu_subscribe -> SubscribeFragment()
+                    R.id.bottom_menu_storage -> {
+                        if (isLogin){
+                            StorageFragment()
+                        } else {
+                            storageNotLoginFragment()
+                        }
+                    }
+                    R.id.bottom_menu_subscribe -> {
+                        if(isLogin){
+                            SubscribeFragment()
+                        } else {
+                            subscribeNotLoginFragment()
+                        }
+                    }
                     R.id.bottom_menu_quest -> QuestFragment()
                     else -> HomeFragment()
                 }
@@ -48,14 +60,14 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (isFirst){
+        /*if (isFirst){
             isFirst = false
             if (!isLogin){
                 val intent = Intent(this, LoginPopupActivity::class.java)
                 startActivity(intent)
                 overridePendingTransition(R.anim.vertical_enter, R.anim.none)
             }
-        }
+        }*/
     }
 
 
