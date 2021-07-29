@@ -1,20 +1,27 @@
 package com.example.youtube
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentHomeBinding
+import com.example.youtube.main.data.VideoMeta
+import com.example.youtube.main.data.Videos
+import com.example.youtube.main.homeFragment.AdapterVideo
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 
 class HomeFragment : Fragment() {
 
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var videoRecyclerViewAdapter : DataVideoAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,22 +44,13 @@ class HomeFragment : Fragment() {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.videoRecyclerview.layoutManager = linearLayoutManager
 
-        var videoList = ArrayList<DataVideo>()
-        videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전", R.raw.ani))
-        videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전", R.raw.logo))
+        binding.videoRecyclerview.adapter = AdapterVideo(activity as MainActivity, listOf<VideoMeta>())
 
-        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
-        binding.videoRecyclerview.adapter = videoRecyclerViewAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.appbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        //Toast.makeText(activity, "testing!!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -69,6 +67,10 @@ class HomeFragment : Fragment() {
         intent.putExtra("subText", video_info)
         intent.putExtra("videoTitle", video_title)
         startActivity(intent)
+    }
+
+    fun videoChange(newVideoData : List<VideoMeta>) {
+        (binding.videoRecyclerview.adapter as AdapterVideo).changeDataList(newVideoData)
     }
 
 }
