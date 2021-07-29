@@ -1,7 +1,9 @@
 package com.example.youtube
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -20,13 +22,6 @@ class HomeFragment : Fragment() {
 
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var videoRecyclerViewAdapter : DataVideoAdapter
-
-    // retrofit 테스트
-    private lateinit var retrofit : Retrofit
-    private lateinit var youtube : RetrofitYoutube
-    private var retrofitVideoList : List<VideoMeta>? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,29 +44,13 @@ class HomeFragment : Fragment() {
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.videoRecyclerview.layoutManager = linearLayoutManager
 
-        var videoList = ArrayList<DataVideo>()
-        videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전", R.raw.ani))
-        videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전", R.raw.logo))
+        binding.videoRecyclerview.adapter = AdapterVideo(activity as MainActivity, listOf<VideoMeta>())
 
-
-        // retrofit test
-        retrofit = ClientYoutube.getInstance()
-        youtube = retrofit.create(RetrofitYoutube::class.java)
-
-
-        videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
-        loadVideo()
-        binding.videoRecyclerview.adapter = videoRecyclerViewAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.appbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        //Toast.makeText(activity, "testing!!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -90,24 +69,8 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    fun loadVideo() {
-        youtube.getVideosPopular().enqueue(object: Callback<Videos> {
-            override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
-                if (response.isSuccessful){
-                    val result = response.body()
-
-                    if (result != null) {
-                        retrofitVideoList = result.items
-                    } else {
-                        retrofitVideoList = listOf()
-                    }
-                }
-                binding.videoRecyclerview.adapter = AdapterVideo(activity as MainActivity, retrofitVideoList!!)
-            }
-
-            override fun onFailure(call: Call<Videos>, t: Throwable) {}
-
-        })
+    fun videoChange(newVideoData : List<VideoMeta>) {
+        (binding.videoRecyclerview.adapter as AdapterVideo).changeDataList(newVideoData)
     }
 
 }

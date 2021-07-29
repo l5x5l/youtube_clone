@@ -13,7 +13,7 @@ import com.example.youtube.VideoActivity
 import com.example.youtube.databinding.ItemVideoBinding
 import com.example.youtube.main.data.VideoMeta
 
-class AdapterVideo(private val context: Context, private val dataList : List<VideoMeta>) : RecyclerView.Adapter<AdapterVideo.ViewHolder>(){
+class AdapterVideo(private val context: Context, private var dataList : List<VideoMeta>) : RecyclerView.Adapter<AdapterVideo.ViewHolder>(){
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
@@ -64,5 +64,10 @@ class AdapterVideo(private val context: Context, private val dataList : List<Vid
         intent.putExtra("videoId", videoId)
         intent.putExtra("userId", userId)
         context.startActivity(intent)
+    }
+
+    fun changeDataList(newData : List<VideoMeta>){
+        dataList = newData
+        notifyDataSetChanged()
     }
 }
