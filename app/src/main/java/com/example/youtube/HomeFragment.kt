@@ -7,6 +7,13 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentHomeBinding
+import com.example.youtube.main.data.VideoMeta
+import com.example.youtube.main.data.Videos
+import com.example.youtube.main.homeFragment.AdapterVideo
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 
 class HomeFragment : Fragment() {
@@ -14,6 +21,11 @@ class HomeFragment : Fragment() {
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var videoRecyclerViewAdapter : DataVideoAdapter
+
+    // retrofit 테스트
+    private lateinit var retrofit : Retrofit
+    private lateinit var youtube : RetrofitYoutube
+    private var retrofitVideoList : List<VideoMeta>? = null
 
 
     override fun onCreateView(
@@ -41,7 +53,14 @@ class HomeFragment : Fragment() {
         videoList.add(DataVideo("Amitie - Animation", R.drawable.ani_thumbnail, "kekeflipnote", R.drawable.user_keke, 495833, "4년 전", R.raw.ani))
         videoList.add(DataVideo("당신이 만족하는 모션로고를 디자인해드립니다. w/블루샤크", R.drawable.logo_thumbnail, "파테슘", R.drawable.user_pate,57836, "2년 전", R.raw.logo))
 
+
+        // retrofit test
+        retrofit = ClientYoutube.getInstance()
+        youtube = retrofit.create(RetrofitYoutube::class.java)
+
+
         videoRecyclerViewAdapter = DataVideoAdapter(activity as MainActivity, videoList)
+        loadVideo()
         binding.videoRecyclerview.adapter = videoRecyclerViewAdapter
     }
 
@@ -69,6 +88,26 @@ class HomeFragment : Fragment() {
         intent.putExtra("subText", video_info)
         intent.putExtra("videoTitle", video_title)
         startActivity(intent)
+    }
+
+    fun loadVideo() {
+        youtube.getVideosPopular().enqueue(object: Callback<Videos> {
+            override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
+                if (response.isSuccessful){
+                    val result = response.body()
+
+                    if (result != null) {
+                        retrofitVideoList = result.items
+                    } else {
+                        retrofitVideoList = listOf()
+                    }
+                }
+                binding.videoRecyclerview.adapter = AdapterVideo(activity as MainActivity, retrofitVideoList!!)
+            }
+
+            override fun onFailure(call: Call<Videos>, t: Throwable) {}
+
+        })
     }
 
 }

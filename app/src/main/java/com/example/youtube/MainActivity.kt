@@ -7,15 +7,26 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.youtube.databinding.ActivityMainBinding
 import com.example.youtube.loginPopup.LoginPopupActivity
+import com.example.youtube.main.data.VideoMeta
+import com.example.youtube.main.data.Videos
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var shared : SharedPreferences
 
-    // test
+    // login 기능 도입 전 임시
     private var isLogin = false
     private var isFirst = true
+
+    // retrofit 관련 임시
+    private lateinit var retrofit : Retrofit
+    private lateinit var youtube : RetrofitYoutube
+    private var retrofitVideoList : List<VideoMeta>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +66,11 @@ class MainActivity : AppCompatActivity() {
             bottomSheetMain.show(this.supportFragmentManager, bottomSheetMain.tag)
         }
 
+        //retrofit 관련
+        /*retrofit = ClientYoutube.getInstance()
+        youtube = retrofit.create(RetrofitYoutube::class.java)*/
+
+        //loadVideo()
     }
 
     override fun onResume() {
@@ -74,4 +90,24 @@ class MainActivity : AppCompatActivity() {
     public fun replaceFragment (fragment : Fragment) {
         supportFragmentManager.beginTransaction().replace(binding.fragmentLayout.id, fragment).commit()
     }
+
+    // retrofit2 테스트
+    /*fun loadVideo() {
+        youtube.getVideosPopular().enqueue(object: Callback<Videos>{
+            override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
+                if (response.isSuccessful){
+                    val result = response.body()
+
+                    if (result != null) {
+                        videoList = result.items
+                    } else {
+                        videoList = listOf()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Videos>, t: Throwable) {}
+
+        })
+    }*/
 }
