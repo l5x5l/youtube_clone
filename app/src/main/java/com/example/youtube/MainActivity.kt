@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var previousFragment : Fragment = homeFragment
 
     // login 기능 도입 전 임시
-    private var isLogin = false
+    private var isLogin = true
     private var isFirst = true
 
     // retrofit 관련
@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                         if (subscribeFragment == null){
                             subscribeFragment = SubscribeFragment()
                             supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, subscribeFragment!!).commit()
+                            loadSubscribes()
                         } else {
                             supportFragmentManager.beginTransaction().show(subscribeFragment!!).commit()
                         }
@@ -195,6 +196,9 @@ class MainActivity : AppCompatActivity() {
     // 구독 fragment 에서 사용할 subscribe channel data
     fun loadSubscribes() {
         youtube.getSubscribes().enqueue(object: Callback<Users>{
+            // save channelID
+            // val channelId = ArrayList<String>()
+
             override fun onResponse(call: Call<Users>, response: Response<Users>) {
                 if (response.isSuccessful) {
                     val result = response.body()
@@ -202,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     retrofitUserList = listOf()
                 }
-                // user
+                subscribeFragment!!.userChange(retrofitUserList!!)
             }
 
             override fun onFailure(call: Call<Users>, t: Throwable) {

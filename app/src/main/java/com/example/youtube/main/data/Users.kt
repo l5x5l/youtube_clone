@@ -2,7 +2,7 @@ package com.example.youtube.main.data
 
 data class UserThumbnailSize(val url : String)
 
-data class UserThumbnail(val high : UserThumbnailSize)
+data class UserThumbnail(val default : UserThumbnailSize)
 
 data class UserId(val channelId : String)
 

@@ -25,10 +25,15 @@ class AdapterUser(private val context: Context, private var dataList : List<User
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(context).load(dataList[position].snippet.thumbnails.high.url).into(holder.img)
+        Glide.with(context).load(dataList[position].snippet.thumbnails.default.url).into(holder.img)
         holder.userName.text = dataList[position].snippet.title
         holder.userId = dataList[position].snippet.resourceId.channelId
     }
 
     override fun getItemCount(): Int = dataList.size
+
+    fun changeDataList(newData : List<UserMeta>){
+        dataList = newData
+        notifyDataSetChanged()
+    }
 }

@@ -28,6 +28,15 @@ interface RetrofitYoutube {
             @Query("key") key : String = "--",
             @Query("part") part : String = "snippet",
             @Query("maxResults") maxResult : Int = 50,
-            @Query("channelId") channelId : String = "--"
+            @Query("channelId") channelId : String = "UCzEJft60ZckvPHoJt1Dgf3A"
     ) : Call<Users>
+
+    @GET("search")
+    fun getChannelVideo(
+            @Query("key") key : String = "--",
+            @Query("part") part : String = "snippet",
+            @Query("type") type : String = "video",
+            @Query("order") order : String = "date",
+            @Query("channelId") channelId : String
+    ) : Call<Videos>
 }
