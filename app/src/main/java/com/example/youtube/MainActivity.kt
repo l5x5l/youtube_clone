@@ -1,13 +1,14 @@
 package com.example.youtube
 
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.youtube.databinding.ActivityMainBinding
-import com.example.youtube.loginPopup.LoginPopupActivity
+import com.example.youtube.main.data.UserMeta
+import com.example.youtube.main.data.Users
 import com.example.youtube.main.data.VideoMeta
 import com.example.youtube.main.data.Videos
 import retrofit2.Call
@@ -33,10 +34,12 @@ class MainActivity : AppCompatActivity() {
     private var isLogin = false
     private var isFirst = true
 
-    // retrofit 관련 임시
+    // retrofit 관련
     private lateinit var retrofit : Retrofit
     private lateinit var youtube : RetrofitYoutube
-    private var retrofitVideoList : List<VideoMeta>? = null
+    private var homeVideoList : List<VideoMeta>? = null
+    private var questVideoList : List<VideoMeta>? = null
+    private var retrofitUserList : List<UserMeta> ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                     if (questFragment == null){
                         questFragment = QuestFragment()
                         supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, questFragment!!).commit()
+                        loadVideoQuest()
                     } else {
                         supportFragmentManager.beginTransaction().show(questFragment!!).commit()
                     }
@@ -116,11 +120,16 @@ class MainActivity : AppCompatActivity() {
             bottomSheetMain.show(this.supportFragmentManager, bottomSheetMain.tag)
         }
 
+        if(!isLogin) {
+            binding.bottom.menu.getItem(2).isVisible = false
+            binding.bottomFab.visibility =  View.GONE
+        }
+
         //retrofit 관련
         retrofit = ClientYoutube.getInstance()
         youtube = retrofit.create(RetrofitYoutube::class.java)
 
-        loadVideo()
+        loadVideoHome()
     }
 
     override fun onResume() {
@@ -141,24 +150,64 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(binding.fragmentLayout.id, fragment).commit()
     }
 
-    // retrofit2 테스트
-    fun loadVideo() {
-        youtube.getVideosPopular().enqueue(object: Callback<Videos> {
+    // 홈 fragment 에서 사용할 video data
+    fun loadVideoHome() {
+        youtube.getVideosPopular(maxResults = 10).enqueue(object: Callback<Videos> {
             override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
                 if (response.isSuccessful){
                     val result = response.body()
-
-                    if (result != null) {
-                        retrofitVideoList = result.items
-                    } else {
-                        retrofitVideoList = listOf()
-                    }
+                    homeVideoList = result?.items ?: listOf()
+                } else {
+                    Log.d("loadVideo", "response is fail...")
+                    homeVideoList = listOf()
                 }
-                homeFragment.videoChange(retrofitVideoList!!)
+                homeFragment.videoChange(homeVideoList!!)
             }
 
-            override fun onFailure(call: Call<Videos>, t: Throwable) {}
+            override fun onFailure(call: Call<Videos>, t: Throwable) {
+                homeVideoList = listOf()
+                Log.d("loadVideo", "onFailure...")
+            }
 
+        })
+    }
+
+    // 탐색 fragment 에서 사용할 video data
+    fun loadVideoQuest() {
+        youtube.getVideosPopular(maxResults = 10).enqueue(object: Callback<Videos> {
+            override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
+                if (response.isSuccessful){
+                    val result = response.body()
+                    questVideoList = result?.items ?: listOf()
+                } else {
+                    questVideoList = listOf()
+                }
+                questFragment!!.videoChange(questVideoList!!)
+            }
+
+            override fun onFailure(call: Call<Videos>, t: Throwable) {
+                questVideoList = listOf()
+            }
+
+        })
+    }
+
+    // 구독 fragment 에서 사용할 subscribe channel data
+    fun loadSubscribes() {
+        youtube.getSubscribes().enqueue(object: Callback<Users>{
+            override fun onResponse(call: Call<Users>, response: Response<Users>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    retrofitUserList = result?.items ?: listOf()
+                } else {
+                    retrofitUserList = listOf()
+                }
+                // user
+            }
+
+            override fun onFailure(call: Call<Users>, t: Throwable) {
+                retrofitUserList = listOf()
+            }
         })
     }
 }
