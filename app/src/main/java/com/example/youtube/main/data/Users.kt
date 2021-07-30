@@ -10,4 +10,4 @@ data class UserSnippet(val title : String, val resourceId : UserId, val thumbnai
 
 data class UserMeta(val snippet : UserSnippet)
 
-data class User(val items : List<UserMeta>)
+data class Users(val items : List<UserMeta>)

@@ -19,13 +19,13 @@ class AdapterVideo(private val context: Context, private var dataList : List<Vid
     private lateinit var binding : ItemVideoBinding
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
-        var videoTitle = binding.videoTitle
-        var thumbnail = binding.thumbnail
-        var infomation = binding.videoInformation
-        var userProfile = binding.profileSrc
-        var userName = binding.userName
-        var progress = binding.progress
-        var mainLayout = binding.mainLayout
+        val videoTitle = binding.videoTitle
+        val thumbnail = binding.thumbnail
+        val information = binding.videoInformation
+        val userProfile = binding.profileSrc
+        val userName = binding.userName
+        val progress = binding.progress
+        val mainLayout = binding.mainLayout
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +36,7 @@ class AdapterVideo(private val context: Context, private var dataList : List<Vid
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.videoTitle.text = dataList[position].snippet.title
         Glide.with(context).load(dataList[position].snippet.thumbnails.high.url).into(holder.thumbnail)
-        holder.infomation.text = "조회수 " + getInformationString(dataList[position].statistics.viewCount)
+        holder.information.text = "조회수 " + getInformationString(dataList[position].statistics.viewCount)
         holder.userName.text = dataList[position].snippet.channelTitle
         holder.userProfile.setImageResource(R.drawable.ic_launcher_background) // 임시
         holder.mainLayout.setOnLongClickListener {
