@@ -1,10 +1,12 @@
 package com.example.youtube.main.homeFragment
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.youtube.MainActivity
 import com.example.youtube.databinding.ItemSubscribeUserBinding
 import com.example.youtube.main.data.UserMeta
 
@@ -16,6 +18,7 @@ class AdapterUser(private val context: Context, private var dataList : List<User
     class ViewHolder(private val binding : ItemSubscribeUserBinding) : RecyclerView.ViewHolder(binding.root) {
         val img = binding.profileImg
         val userName = binding.profileName
+        val main = binding.mainLayout
         var userId = "--"
     }
 
@@ -28,6 +31,9 @@ class AdapterUser(private val context: Context, private var dataList : List<User
         Glide.with(context).load(dataList[position].snippet.thumbnails.default.url).into(holder.img)
         holder.userName.text = dataList[position].snippet.title
         holder.userId = dataList[position].snippet.resourceId.channelId
+        holder.main.setOnClickListener {
+            (context as MainActivity).loadChannelVideos(dataList[position].snippet.resourceId.channelId)
+        }
     }
 
     override fun getItemCount(): Int = dataList.size

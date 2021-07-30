@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.youtube.databinding.ActivityMainBinding
-import com.example.youtube.main.data.UserMeta
-import com.example.youtube.main.data.Users
-import com.example.youtube.main.data.VideoMeta
-import com.example.youtube.main.data.Videos
+import com.example.youtube.main.data.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var homeVideoList : List<VideoMeta>? = null
     private var questVideoList : List<VideoMeta>? = null
     private var retrofitUserList : List<UserMeta> ?= null
+    private var subscribeVideoList : List<SearchVideoMeta> ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -196,8 +194,6 @@ class MainActivity : AppCompatActivity() {
     // 구독 fragment 에서 사용할 subscribe channel data
     fun loadSubscribes() {
         youtube.getSubscribes().enqueue(object: Callback<Users>{
-            // save channelID
-            // val channelId = ArrayList<String>()
 
             override fun onResponse(call: Call<Users>, response: Response<Users>) {
                 if (response.isSuccessful) {
@@ -212,6 +208,27 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Users>, t: Throwable) {
                 retrofitUserList = listOf()
             }
+        })
+    }
+
+    fun loadChannelVideos(channelId : String) {
+        youtube.getChannelVideo(channelId = channelId).enqueue(object : Callback<SearchVideos>{
+            override fun onResponse(call: Call<SearchVideos>, response: Response<SearchVideos>) {
+                if (response.isSuccessful) {
+                    val result = response.body()
+                    subscribeVideoList = result?.items ?: listOf()
+                } else {
+                    subscribeVideoList = listOf()
+                    Log.d("loadVideo", "response is fail...")
+                }
+                subscribeFragment!!.videoChange(subscribeVideoList!!)
+            }
+
+            override fun onFailure(call: Call<SearchVideos>, t: Throwable) {
+                subscribeVideoList = listOf()
+                Log.d("loadVideo", t.localizedMessage)
+            }
+
         })
     }
 }

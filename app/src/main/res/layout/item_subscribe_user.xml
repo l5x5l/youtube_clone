@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:background="@color/background_color"
+    android:clickable="true"
     android:padding="12dp">
 
     <androidx.cardview.widget.CardView
