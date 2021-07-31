@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentHomeBinding
+import com.example.youtube.loginPopup.LoginPopupActivity
 import com.example.youtube.main.data.VideoMeta
 import com.example.youtube.main.data.Videos
 import com.example.youtube.main.homeFragment.AdapterVideo
@@ -71,6 +72,18 @@ class HomeFragment : Fragment() {
 
     fun videoChange(newVideoData : List<VideoMeta>) {
         (binding.videoRecyclerview.adapter as AdapterVideo).changeDataList(newVideoData)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.user -> {
+                val intent = Intent(activity as MainActivity, LoginPopupActivity::class.java)
+                startActivity(intent)
+                (activity as MainActivity).overridePendingTransition(R.anim.vertical_enter, R.anim.none)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }

@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import com.example.youtube.databinding.ActivityMainBinding
 import com.example.youtube.main.data.*
 import com.example.youtube.main.movieFragment.MovieFragment
+import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.user.UserApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,10 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     private var previousFragment : Fragment = homeFragment
 
-    // login 기능 도입 전 임시
-    private var isLogin = true
-    private var isFirst = true
-
     // retrofit 관련
     private lateinit var youtubeRetrofit : Retrofit
     private lateinit var youtube : RetrofitYoutube
@@ -40,6 +38,23 @@ class MainActivity : AppCompatActivity() {
     private var questVideoList : List<VideoMeta>? = null
     private var retrofitUserList : List<UserMeta> ?= null
     private var subscribeVideoList : List<SearchVideoMeta> ?= null
+
+    init {
+        if (AuthApiClient.instance.hasToken()) {
+            UserApiClient.instance.accessTokenInfo { _, error ->
+                GlobalApplication.isLogin = error == null
+                /*if (error is KakaoSdkError && error.isInvalidTokenError()) {
+                    //로그인 필요
+                }
+                else {
+                    //기타 에러
+                }*/
+            }
+        }
+        else {
+            GlobalApplication.isLogin = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                     previousFragment = homeFragment
                 }
                 R.id.bottom_menu_storage -> {
-                    if (isLogin) {
+                    if (GlobalApplication.isLogin) {
                         if (storageFragment == null){
                             storageFragment = StorageFragment()
                             supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, storageFragment!!).commit()
@@ -78,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 R.id.bottom_menu_subscribe -> {
-                    if (isLogin) {
+                    if (GlobalApplication.isLogin) {
                         if (subscribeFragment == null){
                             subscribeFragment = SubscribeFragment()
                             supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, subscribeFragment!!).commit()
@@ -121,10 +136,11 @@ class MainActivity : AppCompatActivity() {
             bottomSheetMain.show(this.supportFragmentManager, bottomSheetMain.tag)
         }
 
-        if(!isLogin) {
+        /*if(!isLogin) {
             binding.bottom.menu.getItem(2).isVisible = false
             binding.bottomFab.visibility =  View.GONE
-        }
+        }*/
+        setBottom(GlobalApplication.isLogin)
 
         //retrofit 관련
         youtubeRetrofit = ClientYoutube.getInstance()
@@ -135,7 +151,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
         /*if (isFirst){
             isFirst = false
             if (!isLogin){
@@ -146,6 +161,20 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        setBottom(GlobalApplication.isLogin)
+    }
+
+    fun setBottom(flag : Boolean){
+        if (flag) {
+            binding.bottom.menu.getItem(2).isVisible = true
+            binding.bottomFab.visibility = View.VISIBLE
+        } else {
+            binding.bottom.menu.getItem(2).isVisible = false
+            binding.bottomFab.visibility =  View.GONE
+        }
+    }
 
     public fun replaceFragment (fragment : Fragment) {
         supportFragmentManager.beginTransaction().replace(binding.fragmentLayout.id, fragment).commit()
