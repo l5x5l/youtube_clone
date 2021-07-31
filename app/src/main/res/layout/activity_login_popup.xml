@@ -65,7 +65,7 @@
         android:text="지금 로그인하여 동영상을 업로드하거나 저장하고 동영상에 댓글을 남겨 보세요"/>
 
     <ImageView
-        android:id="@+id/naver_login"
+        android:id="@+id/kakao_login"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
@@ -73,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_sub"
         android:clickable="true"
-        android:src="@drawable/naver_login"/>
+        android:src="@drawable/kakao_login"/>
 
     <View
         android:id="@+id/border"
@@ -81,7 +81,7 @@
         android:layout_height="2dp"
         android:layout_marginTop="24dp"
         android:background="@color/border_color"
-        app:layout_constraintTop_toBottomOf="@id/naver_login"/>
+        app:layout_constraintTop_toBottomOf="@id/kakao_login"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="24dp"
