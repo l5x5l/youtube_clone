@@ -8,6 +8,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.youtube.databinding.ActivityMainBinding
 import com.example.youtube.main.data.*
+import com.example.youtube.main.movieFragment.MovieFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var subscribeNotLoginFragment : subscribeNotLoginFragment? = null
     private var storageFragment : StorageFragment? = null
     private var storageNotLoginFragment : storageNotLoginFragment? = null
+    private var movieFragment : MovieFragment? = null
 
     private var previousFragment : Fragment = homeFragment
 
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var isFirst = true
 
     // retrofit 관련
-    private lateinit var retrofit : Retrofit
+    private lateinit var youtubeRetrofit : Retrofit
     private lateinit var youtube : RetrofitYoutube
     private var homeVideoList : List<VideoMeta>? = null
     private var questVideoList : List<VideoMeta>? = null
@@ -125,8 +127,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         //retrofit 관련
-        retrofit = ClientYoutube.getInstance()
-        youtube = retrofit.create(RetrofitYoutube::class.java)
+        youtubeRetrofit = ClientYoutube.getInstance()
+        youtube = youtubeRetrofit.create(RetrofitYoutube::class.java)
 
         loadVideoHome()
     }
@@ -230,5 +232,27 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    public fun showMovieFragment() {
+        supportFragmentManager.beginTransaction().hide(previousFragment).commit()
+        if (movieFragment == null){
+            movieFragment = MovieFragment()
+            supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, movieFragment!!).commit()
+        } else {
+            supportFragmentManager.beginTransaction().show(movieFragment!!).commit()
+        }
+        previousFragment = movieFragment!!
+    }
+
+    public fun showQuestFragment() {
+        supportFragmentManager.beginTransaction().hide(previousFragment).commit()
+        if (questFragment == null){
+            questFragment = QuestFragment()
+            supportFragmentManager.beginTransaction().add(binding.fragmentLayout.id, questFragment!!).commit()
+        } else {
+            supportFragmentManager.beginTransaction().show(questFragment!!).commit()
+        }
+        previousFragment = questFragment!!
     }
 }
