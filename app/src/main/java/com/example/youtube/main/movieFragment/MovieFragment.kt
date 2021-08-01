@@ -12,6 +12,7 @@ import com.example.youtube.databinding.FragmentMovieBinding
 import com.example.youtube.databinding.ItemMovieBinding
 import com.example.youtube.main.data.Movie
 import com.example.youtube.main.data.MovieMeta
+import com.example.youtube.main.data.VideoMeta
 import retrofit2.*
 
 
@@ -39,17 +40,20 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val emptyMovieList = listOf(MovieMeta(), MovieMeta())
+        // listOf<MovieMeta>()
+
         binding.recyclerviewPopular.layoutManager = HorizontalLinearManager(activity as MainActivity)
-        binding.recyclerviewPopular.adapter = AdapterMovie(activity as MainActivity, listOf<MovieMeta>())
+        binding.recyclerviewPopular.adapter = AdapterMovie(activity as MainActivity, emptyMovieList)
         binding.recyclerviewPopular.addItemDecoration(DecorationMovie(activity as MainActivity))
 
 
         binding.recyclerviewRate.layoutManager = HorizontalLinearManager(activity as MainActivity)
-        binding.recyclerviewRate.adapter = AdapterMovie(activity as MainActivity, listOf<MovieMeta>())
+        binding.recyclerviewRate.adapter = AdapterMovie(activity as MainActivity, emptyMovieList)
         binding.recyclerviewRate.addItemDecoration(DecorationMovie(activity as MainActivity))
 
         binding.recyclerviewUpcoming.layoutManager = HorizontalLinearManager(activity as MainActivity)
-        binding.recyclerviewUpcoming.adapter = AdapterMovie(activity as MainActivity, listOf<MovieMeta>())
+        binding.recyclerviewUpcoming.adapter = AdapterMovie(activity as MainActivity, emptyMovieList)
         binding.recyclerviewUpcoming.addItemDecoration(DecorationMovie(activity as MainActivity))
 
         binding.appbar.title = "영화"

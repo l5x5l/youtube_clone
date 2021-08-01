@@ -1,5 +1,6 @@
 package com.example.youtube
 
+import com.example.youtube.main.data.Channels
 import com.example.youtube.main.data.SearchVideos
 import com.example.youtube.main.data.Users
 import com.example.youtube.main.data.Videos
@@ -40,4 +41,11 @@ interface RetrofitYoutube {
             @Query("order") order : String = "date",
             @Query("channelId") channelId : String
     ) : Call<SearchVideos>
+
+    @GET("channels")
+    fun getChannelProfile(
+        @Query("key") key : String = "--",
+        @Query("part") part : String = "snippet",
+        @Query("id") id : String
+    ) : Call<Channels>
 }

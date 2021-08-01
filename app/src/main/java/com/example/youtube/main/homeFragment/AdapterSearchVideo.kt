@@ -17,6 +17,7 @@ class AdapterSearchVideo (private val context: Context, private var dataList : L
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
+    private var profileURL : String? = null
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
         val videoTitle = binding.videoTitle
@@ -38,7 +39,11 @@ class AdapterSearchVideo (private val context: Context, private var dataList : L
         Glide.with(context).load(dataList[position].snippet.thumbnails.high.url).into(holder.thumbnail)
         holder.information.text = "임시 조회수"
         holder.userName.text = dataList[position].snippet.channelTitle
-        holder.userProfile.setImageResource(R.drawable.ic_launcher_background) // 임시
+        if (profileURL == null) {
+            holder.userProfile.setImageResource(R.drawable.ic_launcher_background)
+        } else {
+            Glide.with(context).load(profileURL).into(holder.userProfile)
+        }
         holder.mainLayout.setOnLongClickListener {
             val bottomSheet = ClassBottomSheet()
             bottomSheet.show((context as MainActivity).supportFragmentManager, bottomSheet.tag)
@@ -58,8 +63,11 @@ class AdapterSearchVideo (private val context: Context, private var dataList : L
         context.startActivity(intent)
     }
 
-    fun changeDataList(newData : List<SearchVideoMeta>){
+    fun changeDataList(newData : List<SearchVideoMeta>, newProfile : String? = null){
         dataList = newData
+        if (newProfile != null){
+            profileURL = newProfile
+        }
         notifyDataSetChanged()
     }
 }

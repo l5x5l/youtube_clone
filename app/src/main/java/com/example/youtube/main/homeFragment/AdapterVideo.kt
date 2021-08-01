@@ -17,6 +17,7 @@ class AdapterVideo(private val context: Context, private var dataList : List<Vid
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
+    private var profileData : Map<String, String> = mutableMapOf()
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
         val videoTitle = binding.videoTitle
@@ -38,7 +39,12 @@ class AdapterVideo(private val context: Context, private var dataList : List<Vid
         Glide.with(context).load(dataList[position].snippet.thumbnails.high.url).into(holder.thumbnail)
         holder.information.text = "조회수 " + getInformationString(dataList[position].statistics.viewCount)
         holder.userName.text = dataList[position].snippet.channelTitle
-        holder.userProfile.setImageResource(R.drawable.ic_launcher_background) // 임시
+        if (profileData.containsKey(dataList[position].snippet.channelId)){
+            Glide.with(context).load(profileData[dataList[position].snippet.channelId]).into(holder.userProfile)
+        }
+        else {
+            holder.userProfile.setImageResource(R.drawable.ic_launcher_background) // 임시
+        }
         holder.mainLayout.setOnLongClickListener {
             val bottomSheet =ClassBottomSheet()
             bottomSheet.show((context as MainActivity).supportFragmentManager, bottomSheet.tag)
@@ -66,8 +72,11 @@ class AdapterVideo(private val context: Context, private var dataList : List<Vid
         context.startActivity(intent)
     }
 
-    fun changeDataList(newData : List<VideoMeta>){
+    fun changeDataList(newData : List<VideoMeta>, newProfile : Map<String, String>? = null){
         dataList = newData
+        if (newProfile != null){
+            profileData = newProfile
+        }
         notifyDataSetChanged()
     }
 }

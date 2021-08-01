@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
     private var retrofitUserList : List<UserMeta> ?= null
     private var subscribeVideoList : List<SearchVideoMeta> ?= null
 
+    // sharedPreference 관련
+    private lateinit var country : String
+    private lateinit var sharedPreferences: SharedPreferences
+
     init {
         if (AuthApiClient.instance.hasToken()) {
             UserApiClient.instance.accessTokenInfo { _, error ->
@@ -61,6 +65,9 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedPreferences = getSharedPreferences("youtube", MODE_PRIVATE)
+        country = sharedPreferences.getString("country", "KR").toString()
 
         supportFragmentManager.beginTransaction().add(R.id.fragment_layout, homeFragment).commit()
 
@@ -136,10 +143,6 @@ class MainActivity : AppCompatActivity() {
             bottomSheetMain.show(this.supportFragmentManager, bottomSheetMain.tag)
         }
 
-        /*if(!isLogin) {
-            binding.bottom.menu.getItem(2).isVisible = false
-            binding.bottomFab.visibility =  View.GONE
-        }*/
         setBottom(GlobalApplication.isLogin)
 
         //retrofit 관련
@@ -164,6 +167,11 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         setBottom(GlobalApplication.isLogin)
+        if (country != sharedPreferences.getString("country", "KR").toString()){
+            country = sharedPreferences.getString("country", "KR").toString()
+            loadVideoHome()
+            loadVideoQuest()
+        }
     }
 
     fun setBottom(flag : Boolean){
@@ -182,16 +190,26 @@ class MainActivity : AppCompatActivity() {
 
     // 홈 fragment 에서 사용할 video data
     fun loadVideoHome() {
-        youtube.getVideosPopular(maxResults = 10).enqueue(object: Callback<Videos> {
+        youtube.getVideosPopular(maxResults = 10, regionCode = country).enqueue(object: Callback<Videos> {
             override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
                 if (response.isSuccessful){
                     val result = response.body()
                     homeVideoList = result?.items ?: listOf()
+
+                    var channelString = ""
+                    for (i in homeVideoList!!.indices){
+                        if (i != 0){
+                            channelString += ","
+                        }
+                        channelString += homeVideoList!![i].snippet.channelId
+                    }
+                    getProfile(channelString)
+
                 } else {
                     Log.d("loadVideo", "response is fail...")
                     homeVideoList = listOf()
                 }
-                homeFragment.videoChange(homeVideoList!!)
+                //homeFragment.videoChange(homeVideoList!!)
             }
 
             override fun onFailure(call: Call<Videos>, t: Throwable) {
@@ -204,15 +222,25 @@ class MainActivity : AppCompatActivity() {
 
     // 탐색 fragment 에서 사용할 video data
     fun loadVideoQuest() {
-        youtube.getVideosPopular(maxResults = 10).enqueue(object: Callback<Videos> {
+        youtube.getVideosPopular(maxResults = 5, regionCode = country).enqueue(object: Callback<Videos> {
             override fun onResponse(call: Call<Videos>, response: Response<Videos>) {
                 if (response.isSuccessful){
                     val result = response.body()
                     questVideoList = result?.items ?: listOf()
+
+                    var channelString = ""
+                    for (i in homeVideoList!!.indices){
+                        if (i != 0){
+                            channelString += ","
+                        }
+                        channelString += homeVideoList!![i].snippet.channelId
+                    }
+                    getProfile(channelString, "quest")
+
                 } else {
                     questVideoList = listOf()
                 }
-                questFragment!!.videoChange(questVideoList!!)
+                //questFragment!!.videoChange(questVideoList!!)
             }
 
             override fun onFailure(call: Call<Videos>, t: Throwable) {
@@ -242,7 +270,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun loadChannelVideos(channelId : String) {
+    fun loadChannelVideos(channelId : String, profile : String? = null) {
         youtube.getChannelVideo(channelId = channelId).enqueue(object : Callback<SearchVideos>{
             override fun onResponse(call: Call<SearchVideos>, response: Response<SearchVideos>) {
                 if (response.isSuccessful) {
@@ -252,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                     subscribeVideoList = listOf()
                     Log.d("loadVideo", "response is fail...")
                 }
-                subscribeFragment!!.videoChange(subscribeVideoList!!)
+                subscribeFragment!!.videoChange(subscribeVideoList!!, profile)
             }
 
             override fun onFailure(call: Call<SearchVideos>, t: Throwable) {
@@ -260,6 +288,33 @@ class MainActivity : AppCompatActivity() {
                 Log.d("loadVideo", t.localizedMessage)
             }
 
+        })
+    }
+
+    // 포로필 사진을 구하기 위한 여정
+    fun getProfile(channelId: String, target : String = "home") {
+        youtube.getChannelProfile(id = channelId).enqueue(object : Callback<Channels>{
+            override fun onResponse(call: Call<Channels>, response: Response<Channels>) {
+                if (response.isSuccessful){
+                    val result = response.body()
+                    val map = mutableMapOf<String, String>()
+                    val channelProfileList = result?.items ?: listOf()
+
+                    for (channelProfile in channelProfileList){
+                        map[channelProfile.id] = channelProfile.snippet.thumbnails.default.url
+                    }
+
+                    when (target) {
+                        "home" -> {
+                            homeFragment.videoChange(homeVideoList!!, map)
+                        }
+                        else -> {
+                            questFragment!!.videoChange(questVideoList!!, map)
+                        }
+                    }
+                }
+            }
+            override fun onFailure(call: Call<Channels>, t: Throwable) {}
         })
     }
 

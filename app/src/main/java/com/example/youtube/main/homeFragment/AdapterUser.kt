@@ -32,7 +32,7 @@ class AdapterUser(private val context: Context, private var dataList : List<User
         holder.userName.text = dataList[position].snippet.title
         holder.userId = dataList[position].snippet.resourceId.channelId
         holder.main.setOnClickListener {
-            (context as MainActivity).loadChannelVideos(dataList[position].snippet.resourceId.channelId)
+            (context as MainActivity).loadChannelVideos(dataList[position].snippet.resourceId.channelId, dataList[position].snippet.thumbnails.default.url)
         }
     }
 

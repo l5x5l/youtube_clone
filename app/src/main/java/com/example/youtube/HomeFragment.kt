@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentHomeBinding
+import com.example.youtube.languagePopup.LanguagePopupActivity
 import com.example.youtube.loginPopup.LoginPopupActivity
 import com.example.youtube.main.data.VideoMeta
 import com.example.youtube.main.data.Videos
@@ -70,14 +71,20 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
-    fun videoChange(newVideoData : List<VideoMeta>) {
-        (binding.videoRecyclerview.adapter as AdapterVideo).changeDataList(newVideoData)
+    fun videoChange(newVideoData : List<VideoMeta>, newProfileData : Map<String, String> ?= null) {
+        (binding.videoRecyclerview.adapter as AdapterVideo).changeDataList(newVideoData, newProfileData)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.user -> {
                 val intent = Intent(activity as MainActivity, LoginPopupActivity::class.java)
+                startActivity(intent)
+                (activity as MainActivity).overridePendingTransition(R.anim.vertical_enter, R.anim.none)
+                true
+            }
+            R.id.language -> {
+                val intent = Intent(activity as MainActivity, LanguagePopupActivity::class.java)
                 startActivity(intent)
                 (activity as MainActivity).overridePendingTransition(R.anim.vertical_enter, R.anim.none)
                 true

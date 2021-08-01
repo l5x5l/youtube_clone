@@ -75,8 +75,9 @@ class QuestFragment : Fragment() {
         _binding = null
     }
 
-    fun videoChange(newVideoData : List<VideoMeta>) {
-        (binding.videoRecycler.adapter as AdapterVideo).changeDataList(newVideoData)
+    fun videoChange(newVideoData : List<VideoMeta>, newProfileData : Map<String, String> ?= null) {
+        (binding.videoRecycler.adapter as AdapterVideo).changeDataList(newVideoData, newProfileData)
     }
+
 
 }
