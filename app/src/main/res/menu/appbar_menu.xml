@@ -2,14 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/language"
         android:title="connect"
-        android:icon="@drawable/ic_connect"
+        android:icon="@drawable/ic_quest"
         app:showAsAction="always"/>
     <item
-        android:title="notification"
-        android:icon="@drawable/ic_notification"
-        app:showAsAction="always"/>
-    <item
+        android:id="@+id/search"
         android:title="search"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"/>
