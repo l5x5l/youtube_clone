@@ -309,7 +309,8 @@ class MainActivity : AppCompatActivity() {
                             homeFragment.videoChange(homeVideoList!!, map)
                         }
                         else -> {
-                            questFragment!!.videoChange(questVideoList!!, map)
+                            if (questFragment != null)
+                                questFragment!!.videoChange(questVideoList!!, map)
                         }
                     }
                 }
