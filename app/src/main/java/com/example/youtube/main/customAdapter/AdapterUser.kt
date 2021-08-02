@@ -1,7 +1,6 @@
-package com.example.youtube.main.homeFragment
+package com.example.youtube.main.customAdapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

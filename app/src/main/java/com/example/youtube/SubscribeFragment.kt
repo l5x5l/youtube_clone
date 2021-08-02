@@ -3,14 +3,13 @@ package com.example.youtube
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Adapter
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentSubscribeBinding
 import com.example.youtube.main.data.SearchVideoMeta
 import com.example.youtube.main.data.UserMeta
-import com.example.youtube.main.homeFragment.AdapterSearchVideo
-import com.example.youtube.main.homeFragment.AdapterUser
+import com.example.youtube.main.customAdapter.AdapterSearchVideo
+import com.example.youtube.main.customAdapter.AdapterUser
 
 class SubscribeFragment : Fragment() {
 

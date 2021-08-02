@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.youtube.databinding.FragmentQuestBinding
 import com.example.youtube.main.data.VideoMeta
-import com.example.youtube.main.homeFragment.AdapterVideo
+import com.example.youtube.main.customAdapter.AdapterVideo
 
 class QuestFragment : Fragment() {
 

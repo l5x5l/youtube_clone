@@ -1,4 +1,4 @@
-package com.example.youtube.main.homeFragment
+package com.example.youtube.main.customAdapter
 
 import android.content.Context
 import android.content.Intent
@@ -11,13 +11,13 @@ import com.example.youtube.MainActivity
 import com.example.youtube.R
 import com.example.youtube.VideoActivity
 import com.example.youtube.databinding.ItemVideoBinding
-import com.example.youtube.main.data.SearchVideoMeta
+import com.example.youtube.main.data.VideoMeta
 
-class AdapterSearchVideo (private val context: Context, private var dataList : List<SearchVideoMeta>) : RecyclerView.Adapter<AdapterSearchVideo.ViewHolder>(){
+class AdapterVideo(private val context: Context, private var dataList : List<VideoMeta>) : RecyclerView.Adapter<AdapterVideo.ViewHolder>(){
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private lateinit var binding : ItemVideoBinding
-    private var profileURL : String? = null
+    private var profileData : Map<String, String> = mutableMapOf()
 
     class ViewHolder(private val binding : ItemVideoBinding) : RecyclerView.ViewHolder(binding.root){
         val videoTitle = binding.videoTitle
@@ -37,24 +37,33 @@ class AdapterSearchVideo (private val context: Context, private var dataList : L
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.videoTitle.text = dataList[position].snippet.title
         Glide.with(context).load(dataList[position].snippet.thumbnails.high.url).into(holder.thumbnail)
-        holder.information.text = "임시 조회수"
+        holder.information.text = "조회수 " + getInformationString(dataList[position].statistics.viewCount)
         holder.userName.text = dataList[position].snippet.channelTitle
-        if (profileURL == null) {
-            holder.userProfile.setImageResource(R.drawable.ic_launcher_background)
-        } else {
-            Glide.with(context).load(profileURL).into(holder.userProfile)
+        if (profileData.containsKey(dataList[position].snippet.channelId)){
+            Glide.with(context).load(profileData[dataList[position].snippet.channelId]).into(holder.userProfile)
+        }
+        else {
+            holder.userProfile.setImageResource(R.drawable.ic_launcher_background) // 임시
         }
         holder.mainLayout.setOnLongClickListener {
-            val bottomSheet = ClassBottomSheet()
+            val bottomSheet =ClassBottomSheet()
             bottomSheet.show((context as MainActivity).supportFragmentManager, bottomSheet.tag)
             true
         }
         holder.mainLayout.setOnClickListener {
-            goToVideoActivity(dataList[position].id.videoId, dataList[position].snippet.channelId)
+            goToVideoActivity(dataList[position].id, dataList[position].snippet.channelId)
         }
     }
 
     override fun getItemCount(): Int = dataList.size
+
+    private fun getInformationString(watchCount : Long) : String {
+        return when(watchCount / 1000){
+            0L -> watchCount.toString() + "회 "
+            in 1..9 -> (watchCount / 1000).toString() + "천회 "
+            else -> (watchCount / 10000).toString() + "만회 "
+        }
+    }
 
     private fun goToVideoActivity(videoId : String, userId : String) {
         val intent = Intent(context as MainActivity, VideoActivity::class.java)
@@ -63,10 +72,10 @@ class AdapterSearchVideo (private val context: Context, private var dataList : L
         context.startActivity(intent)
     }
 
-    fun changeDataList(newData : List<SearchVideoMeta>, newProfile : String? = null){
+    fun changeDataList(newData : List<VideoMeta>, newProfile : Map<String, String>? = null){
         dataList = newData
         if (newProfile != null){
-            profileURL = newProfile
+            profileData = newProfile
         }
         notifyDataSetChanged()
     }
